@@ -25,7 +25,7 @@ n_samples = 5
 
 
 reader = readers.ImageReader(n_labels, n_samples)
-net = templates.MeetMatch().to(cuda)
+net = templates.MeetMatch()
 
 variance_criterion = nn.MSELoss()
 similarity_criterion = nn.CosineEmbeddingLoss()
@@ -38,11 +38,11 @@ for i in range(n_epochs):
     references = torch.zeros(n_labels, n_features)
     for i in range(n_labels):
         _, im = reader.read(i)
-        references[i] = hw_forward_pass(net, im.to(cuda))
+        references[i] = hw_forward_pass(net, im)
 
     variance = references.std(1)
     output = 1 / (variance + 10 ** -8)
-    loss = variance_criterion(torch.zeros(n_labels, device=cuda), output)
+    loss = variance_criterion(torch.zeros(n_labels), output)
     print('distuingish loss : ', loss)
     loss.backward(retain_graph=True)
     optimizer.step()
@@ -53,7 +53,7 @@ for i in range(n_epochs):
         label, im = out
         feature = hw_forward_pass(net, im, squeeze=False)
         reference = torch.unsqueeze(references[label], 0)
-        degree_loss = similarity_criterion(references, feature, torch.Tensor([1], device=cuda))
+        degree_loss = similarity_criterion(references, feature, torch.Tensor([1]))
         value_loss = value_criterion(reference, feature)
         loss += degree_loss + value_loss
         print('identification loss : ', loss)
