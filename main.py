@@ -25,7 +25,7 @@ n_samples = 5
 
 
 reader = readers.ImageReader(n_labels, n_samples)
-net = templates.MeetMatch().to(cuda)
+net = templates.MeetMatch().cuda()
 
 variance_criterion = nn.MSELoss()
 similarity_criterion = nn.CosineEmbeddingLoss()
