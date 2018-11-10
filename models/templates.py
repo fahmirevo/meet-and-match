@@ -24,7 +24,7 @@ class MeetMatch(nn.Module):
 
         self.classifier = nn.Sequential(
             nn.Dropout(p=0.5),
-            nn.Conv2d(128, self.n_features, kernel_size=1),
+            nn.Conv2d(64, self.n_features, kernel_size=1),
             nn.ReLU(inplace=True),
             nn.AdaptiveAvgPool2d((1, 1)),
             nn.Tanh()
