@@ -10,10 +10,13 @@ from utils import readers
 
 def hw_forward_pass(net, x, squeeze=True):
     x = torch.unsqueeze(x, 0)
-    x = net.cuda(x)
+    x = net(x)
     if squeeze:
         x = torch.squeeze(x)
     return x
+
+torch.set_default_tensor_type('torch.cuda.FloatTensor')
+cuda = torch.device('cuda')
 
 n_epochs = 20
 n_features = 10
@@ -22,7 +25,7 @@ n_samples = 5
 
 
 reader = readers.ImageReader(n_labels, n_samples)
-net = templates.MeetMatch()
+net = templates.MeetMatch().to(cuda)
 
 variance_criterion = nn.MSELoss()
 similarity_criterion = nn.CosineEmbeddingLoss()
@@ -35,11 +38,11 @@ for i in range(n_epochs):
     references = torch.zeros(n_labels, n_features)
     for i in range(n_labels):
         _, im = reader.read(i)
-        references[i] = hw_forward_pass(net, im)
+        references[i] = hw_forward_pass(net, im.to(cuda))
 
     variance = references.std(1)
     output = 1 / (variance + 10 ** -8)
-    loss = variance_criterion.cuda(torch.zeros(n_labels), output)
+    loss = variance_criterion(torch.zeros(n_labels, device=cuda), output)
     print('distuingish loss : ', loss)
     loss.backward(retain_graph=True)
     optimizer.step()
@@ -50,8 +53,8 @@ for i in range(n_epochs):
         label, im = out
         feature = hw_forward_pass(net, im, squeeze=False)
         reference = torch.unsqueeze(references[label], 0)
-        degree_loss = similarity_criterion.cuda(references, feature, torch.Tensor([1]))
-        value_loss = value_criterion.cuda(reference, feature)
+        degree_loss = similarity_criterion(references, feature, torch.Tensor([1], device=cuda))
+        value_loss = value_criterion(reference, feature)
         loss += degree_loss + value_loss
         print('identification loss : ', loss)
         out = reader.read()
