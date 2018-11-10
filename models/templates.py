@@ -16,10 +16,10 @@ class MeetMatch(nn.Module):
             modules.Fire(32, 16, 32, 32),
             modules.Fire(64, 16, 32, 32),
             nn.MaxPool2d(kernel_size=3, stride=2),
-            modules.Fire(64, 32, 64, 64),
-            modules.Fire(128, 32, 64, 64),
-            modules.Fire(128, 32, 64, 64),
-            nn.MaxPool2d(kernel_size=3, stride=2)
+            # modules.Fire(64, 32, 64, 64),
+            # modules.Fire(128, 32, 64, 64),
+            # modules.Fire(128, 32, 64, 64),
+            # nn.MaxPool2d(kernel_size=3, stride=2)
         )
 
         self.classifier = nn.Sequential(
