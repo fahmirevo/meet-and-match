@@ -10,7 +10,7 @@ from utils import readers
 
 def hw_forward_pass(net, x, squeeze=True):
     x = torch.unsqueeze(x, 0)
-    x = net(x)
+    x = net.cuda(x)
     if squeeze:
         x = torch.squeeze(x)
     return x
@@ -39,7 +39,7 @@ for i in range(n_epochs):
 
     variance = references.std(1)
     output = 1 / (variance + 10 ** -8)
-    loss = variance_criterion(torch.zeros(n_labels), output)
+    loss = variance_criterion.cuda(torch.zeros(n_labels), output)
     print('distuingish loss : ', loss)
     loss.backward(retain_graph=True)
     optimizer.step()
@@ -50,8 +50,8 @@ for i in range(n_epochs):
         label, im = out
         feature = hw_forward_pass(net, im, squeeze=False)
         reference = torch.unsqueeze(references[label], 0)
-        degree_loss = similarity_criterion(references, feature, torch.Tensor([1]))
-        value_loss = value_criterion(reference, feature)
+        degree_loss = similarity_criterion.cuda(references, feature, torch.Tensor([1]))
+        value_loss = value_criterion.cuda(reference, feature)
         loss += degree_loss + value_loss
         print('identification loss : ', loss)
         out = reader.read()
