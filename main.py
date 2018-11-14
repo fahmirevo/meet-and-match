@@ -49,7 +49,7 @@ for i in range(n_epochs):
     optimizer.step()
 
     out = reader.read()
-    loss = 0
+    total_loss = 0
     while out:
         label, im = out
         im = im.cuda()
@@ -57,8 +57,9 @@ for i in range(n_epochs):
         reference = torch.unsqueeze(references[label], 0)
         degree_loss = similarity_criterion(references, feature, torch.Tensor([1]).cuda())
         value_loss = value_criterion(reference, feature)
-        loss += degree_loss + value_loss
+        loss = degree_loss + value_loss
         print('identification loss : ', loss)
+        total_loss += loss.data[0]
         out = reader.read()
     optimizer.zero_grad()
     loss.backward()
