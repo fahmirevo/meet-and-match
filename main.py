@@ -18,7 +18,7 @@ def hw_forward_pass(net, x, squeeze=True):
 torch.set_default_tensor_type('torch.cuda.FloatTensor')
 cuda = torch.device('cuda')
 
-n_epochs = 20
+n_epochs = 50
 n_features = 10
 n_labels = 20
 n_samples = 2
@@ -44,6 +44,7 @@ for i in range(n_epochs):
     variance = references.std(1)
     output = 1 / (variance + 10 ** -8)
     loss = variance_criterion(torch.zeros(n_labels).cuda(), output)
+    print('-----------------------------------------------------')
     print('distuingish loss : ', loss)
     loss.backward(retain_graph=True)
     optimizer.step()
@@ -57,6 +58,7 @@ for i in range(n_epochs):
         reference = torch.unsqueeze(references[label], 0)
         degree_loss = similarity_criterion(references, feature, torch.Tensor([1]).cuda())
         value_loss = value_criterion(reference, feature)
+        print(degree_loss, value_loss)
         loss = degree_loss + value_loss
         print('identification loss : ', loss)
         total_loss += loss.data[0]
