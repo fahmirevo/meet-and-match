@@ -20,8 +20,8 @@ cuda = torch.device('cuda')
 
 n_epochs = 20
 n_features = 10
-n_labels = 35
-n_samples = 5
+n_labels = 20
+n_samples = 2
 
 
 reader = readers.ImageReader(n_labels, n_samples)

@@ -12,7 +12,7 @@ class MeetMatch(nn.Module):
         self.extractor = nn.Sequential(
             nn.Conv2d(in_planes, 32, kernel_size=3, stride=2),
             nn.ReLU(inplace=True),
-            nn.AdaptiveMaxPool2d((300, 300)),
+            nn.AdaptiveMaxPool2d((200, 300)),
             modules.Fire(32, 16, 32, 32),
             modules.Fire(64, 16, 32, 32),
             nn.MaxPool2d(kernel_size=3, stride=2),
