@@ -41,13 +41,13 @@ for i in range(n_epochs):
         im = im.cuda()
         references[i] = hw_forward_pass(net, im)
 
-    variance = references.std(1)
-    output = 1 / (variance + 10 ** -8)
-    loss = variance_criterion(torch.zeros(n_labels).cuda(), output)
+    # variance = references.std(1)
+    # output = 1 / (variance + 10 ** -8)
+    # loss = variance_criterion(torch.zeros(n_labels).cuda(), output)
     print('-----------------------------------------------------')
-    print('distuingish loss : ', loss)
-    loss.backward(retain_graph=True)
-    optimizer.step()
+    # print('distuingish loss : ', loss)
+    # loss.backward(retain_graph=True)
+    # optimizer.step()
 
     out = reader.read()
     total_loss = 0
@@ -56,7 +56,10 @@ for i in range(n_epochs):
         im = im.cuda()
         feature = hw_forward_pass(net, im, squeeze=False)
         reference = torch.unsqueeze(references[label], 0)
-        degree_loss = similarity_criterion(reference, feature, torch.Tensor([1]).cuda())
+        target = torch.ones(n_labels) * -1
+        target[i] = 1
+        # degree_loss = similarity_criterion(reference, feature, torch.Tensor([1]).cuda())
+        degree_loss = similarity_criterion(references, feature, target.cuda())
         value_loss = value_criterion(reference, feature)
         loss = degree_loss + value_loss
         print('identification loss : ', loss)
