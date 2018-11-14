@@ -56,7 +56,7 @@ for i in range(n_epochs):
         im = im.cuda()
         feature = hw_forward_pass(net, im, squeeze=False)
         reference = torch.unsqueeze(references[label], 0)
-        degree_loss = similarity_criterion(references, feature, torch.Tensor([1]).cuda())
+        degree_loss = similarity_criterion(reference, feature, torch.Tensor([1]).cuda())
         value_loss = value_criterion(reference, feature)
         print(degree_loss, value_loss)
         loss = degree_loss + value_loss
