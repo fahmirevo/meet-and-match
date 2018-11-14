@@ -58,7 +58,6 @@ for i in range(n_epochs):
         reference = torch.unsqueeze(references[label], 0)
         degree_loss = similarity_criterion(reference, feature, torch.Tensor([1]).cuda())
         value_loss = value_criterion(reference, feature)
-        print(degree_loss, value_loss)
         loss = degree_loss + value_loss
         print('identification loss : ', loss)
         total_loss += loss.data[0]
