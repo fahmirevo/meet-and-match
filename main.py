@@ -78,7 +78,9 @@ for i in range(n_epochs):
     optimizer.zero_grad()
     total_loss.backward()
     optimizer.step()
-    err.append(int(total_loss))
+    err.append(float(total_loss))
 
 with open('err.pickle', 'wb') as f:
     pickle.dump(err, f)
+
+torch.save(net, 'net.pt')
