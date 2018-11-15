@@ -39,10 +39,10 @@ err = []
 for i in range(n_epochs):
     optimizer.zero_grad()
     references = torch.zeros(n_labels, n_features)
-    for i in range(n_labels):
+    for j in range(n_labels):
         _, im = reader.read(i)
         im = im.cuda()
-        references[i] = hw_forward_pass(net, im)
+        references[j] = hw_forward_pass(net, im)
 
     # variance = references.std(1)
     # output = 1 / (variance + 10 ** -8)
