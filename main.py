@@ -18,7 +18,7 @@ def hw_forward_pass(net, x, squeeze=True):
 torch.set_default_tensor_type('torch.cuda.FloatTensor')
 cuda = torch.device('cuda')
 
-n_epochs = 50
+n_epochs = 100
 n_features = 10
 n_labels = 20
 n_samples = 2
@@ -66,9 +66,10 @@ for i in range(n_epochs):
         # value_loss = value_criterion(reference, feature)
         # loss = degree_loss + value_loss
         loss = criterion(target, feature) / criterion(opposition, feature)
-        print('identification loss : ', loss)
+        # print('identification loss : ', loss)
         total_loss += loss.data[0]
         out = reader.read()
+    print('epoch loss : ', total_loss)
     optimizer.zero_grad()
-    loss.backward()
+    total_loss.backward()
     optimizer.step()
