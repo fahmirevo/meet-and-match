@@ -74,11 +74,11 @@ for i in range(n_epochs):
         else:
             total_loss += loss.data[0]
         out = reader.read()
-    print('epoch loss : ', total_loss)
+    print(i, 'epoch loss : ', total_loss)
     optimizer.zero_grad()
     total_loss.backward()
     optimizer.step()
-    err.append(total_loss)
+    err.append(int(total_loss))
 
 with open('err.pickle', 'wb') as f:
     pickle.dump(err, f)
