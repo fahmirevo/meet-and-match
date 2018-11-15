@@ -27,9 +27,10 @@ n_samples = 2
 reader = readers.ImageReader(n_labels, n_samples)
 net = templates.MeetMatch().cuda()
 
-variance_criterion = nn.MSELoss()
-similarity_criterion = nn.CosineEmbeddingLoss()
-value_criterion = nn.MSELoss()
+# variance_criterion = nn.MSELoss()
+# similarity_criterion = nn.CosineEmbeddingLoss()
+# value_criterion = nn.MSELoss()
+criterion = nn.MSELoss()
 optimizer = optim.Adam(net.parameters(), lr=0.0001)
 
 
@@ -55,13 +56,16 @@ for i in range(n_epochs):
         label, im = out
         im = im.cuda()
         feature = hw_forward_pass(net, im, squeeze=False)
-        reference = torch.unsqueeze(references[label], 0)
-        target = torch.ones(n_labels) * -1
-        target[i] = 1
+        target = torch.unsqueeze(references[label], 0)
+        opposition = references[torch.arange(n_labels) != label]
+        # reference = torch.unsqueeze(references[label], 0)
+        # target = torch.ones(n_labels) * -1
+        # target[i] = 1
         # degree_loss = similarity_criterion(reference, feature, torch.Tensor([1]).cuda())
-        degree_loss = similarity_criterion(references, feature, target.cuda())
-        value_loss = value_criterion(reference, feature)
-        loss = degree_loss + value_loss
+        # degree_loss = similarity_criterion(references, feature, target.cuda())
+        # value_loss = value_criterion(reference, feature)
+        # loss = degree_loss + value_loss
+        loss = criterion(target, feature) / criterion(opposition, feature)
         print('identification loss : ', loss)
         total_loss += loss.data[0]
         out = reader.read()
