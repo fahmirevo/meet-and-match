@@ -68,7 +68,7 @@ for i in range(n_epochs):
         loss = criterion(target, feature) / criterion(opposition, feature)
         # print('identification loss : ', loss)
         if total_loss is None:
-            total_loss = loss.data[0]
+            total_loss = loss
         else:
             total_loss += loss.data[0]
         out = reader.read()
