@@ -40,7 +40,7 @@ for i in range(n_epochs):
     optimizer.zero_grad()
     references = torch.zeros(n_labels, n_features)
     for j in range(n_labels):
-        _, im = reader.read(i)
+        _, im = reader.read(j)
         im = im.cuda()
         references[j] = hw_forward_pass(net, im)
 
