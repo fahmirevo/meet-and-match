@@ -6,6 +6,7 @@ import numpy as np
 
 from models import templates
 from utils import readers
+import pickle
 
 
 def hw_forward_pass(net, x, squeeze=True):
@@ -34,6 +35,7 @@ criterion = nn.MSELoss()
 optimizer = optim.Adam(net.parameters(), lr=0.0001)
 
 
+err = []
 for i in range(n_epochs):
     optimizer.zero_grad()
     references = torch.zeros(n_labels, n_features)
@@ -76,3 +78,7 @@ for i in range(n_epochs):
     optimizer.zero_grad()
     total_loss.backward()
     optimizer.step()
+    err.append(total_loss)
+
+with open('err.pickle', 'wb') as f:
+    pickle.dump(err, f)
