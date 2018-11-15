@@ -51,7 +51,7 @@ for i in range(n_epochs):
     # optimizer.step()
 
     out = reader.read()
-    total_loss = 0
+    total_loss = None
     while out:
         label, im = out
         im = im.cuda()
@@ -67,7 +67,10 @@ for i in range(n_epochs):
         # loss = degree_loss + value_loss
         loss = criterion(target, feature) / criterion(opposition, feature)
         # print('identification loss : ', loss)
-        total_loss += loss.data[0]
+        if total_loss is None:
+            total_loss = loss.data[0]
+        else:
+            total_loss += loss.data[0]
         out = reader.read()
     print('epoch loss : ', total_loss)
     optimizer.zero_grad()
