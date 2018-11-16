@@ -19,10 +19,13 @@ def hw_forward_pass(net, x, squeeze=True):
 torch.set_default_tensor_type('torch.cuda.FloatTensor')
 cuda = torch.device('cuda')
 
-n_epochs = 100
+n_images = 4031
+n_epochs = 50
 n_features = 10
 n_labels = 20
 n_samples = 2
+epoch_loop = n_images // (n_samples * n_labels + n_labels)
+epochs = n_epochs * epoch_loop
 
 
 reader = readers.ImageReader(n_labels, n_samples)
@@ -36,7 +39,7 @@ optimizer = optim.Adam(net.parameters(), lr=0.0001)
 
 
 err = []
-for i in range(n_epochs):
+for i in range(epochs):
     optimizer.zero_grad()
     references = torch.zeros(n_labels, n_features)
     for j in range(n_labels):
@@ -47,7 +50,7 @@ for i in range(n_epochs):
     # variance = references.std(1)
     # output = 1 / (variance + 10 ** -8)
     # loss = variance_criterion(torch.zeros(n_labels).cuda(), output)
-    print('-----------------------------------------------------')
+    # print('-----------------------------------------------------')
     # print('distuingish loss : ', loss)
     # loss.backward(retain_graph=True)
     # optimizer.step()
