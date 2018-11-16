@@ -79,7 +79,7 @@ for epoch in range(n_epochs):
                 # total_loss += loss.data[0]
                 total_loss += loss.item()
             out = reader.read()
-        print(i, 'epoch loss : ', total_loss)
+        print(epoch, i, 'epoch loss : ', total_loss)
         optimizer.zero_grad()
         total_loss.backward()
         optimizer.step()
